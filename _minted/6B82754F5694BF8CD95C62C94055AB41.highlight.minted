@@ -1,0 +1,156 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n+nb}{clear}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{clc}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{close}\PYG{+w}{ }\PYG{l+s}{all}\PYG{p}{;}
+
+\PYG{n}{basePath}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{/Users/macbookair15/Desktop/海洋气象学/m\PYGZus{}map/\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{outdir}\PYG{+w}{   }\PYG{p}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{/Users/macbookair15/Desktop/SSH/\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{if}\PYG{+w}{ }\PYG{o}{\PYGZti{}}\PYG{n+nb}{exist}\PYG{p}{(}\PYG{n}{outdir}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{dir\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{mkdir}\PYG{p}{(}\PYG{n}{outdir}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{end}
+
+\PYG{n}{REG\PYGZus{}LON}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mi}{120}\PYG{+w}{ }\PYG{l+m+mi}{160}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{REG\PYGZus{}LAT}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mi}{10}\PYG{+w}{ }\PYG{l+m+mi}{40}\PYG{p}{]}\PYG{p}{;}
+\PYG{n+nb}{years}\PYG{+w}{   }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mi}{2007}\PYG{+w}{ }\PYG{l+m+mi}{2017}\PYG{p}{]}\PYG{p}{;}
+
+\PYG{n}{cmap}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{turbo}\PYG{p}{(}\PYG{l+m+mi}{256}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{deg2rad}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{pi}\PYG{o}{/}\PYG{l+m+mi}{180}\PYG{p}{;}
+\PYG{n}{Re}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{6371000}\PYG{p}{;}
+\PYG{n}{region\PYGZus{}title}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{(\PYGZpc{}g°–\PYGZpc{}g°E, \PYGZpc{}g°–\PYGZpc{}g°N)\PYGZsq{}}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LON}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LON}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LAT}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LAT}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{n}{data}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{k}{for}\PYG{+w}{ }\PYG{n}{y}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{years}
+\PYG{+w}{    }\PYG{n}{fname}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{fullfile}\PYG{p}{(}\PYG{n}{basePath}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sshg.\PYGZpc{}d.nc\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{o}{\PYGZti{}}\PYG{n+nb}{isfile}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{)}
+\PYG{+w}{        }\PYG{n+nb}{warning}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{文件不存在: \PYGZpc{}s\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{fname}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{continue}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{end}
+
+\PYG{+w}{    }\PYG{n}{lon}\PYG{+w}{  }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{double}\PYG{p}{(}\PYG{n+nb}{ncread}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lon\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{lat}\PYG{+w}{  }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{double}\PYG{p}{(}\PYG{n+nb}{ncread}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lat\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{time}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{double}\PYG{p}{(}\PYG{n+nb}{ncread}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{time\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{sshg}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{double}\PYG{p}{(}\PYG{n+nb}{ncread}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sshg\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{n+nb}{size}\PYG{p}{(}\PYG{n}{sshg}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{==}\PYG{n+nb}{numel}\PYG{p}{(}\PYG{n}{lon}\PYG{p}{)}
+\PYG{+w}{        }\PYG{n}{sshg}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{permute}\PYG{p}{(}\PYG{n}{sshg}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c}{\PYGZpc{} (lat,lon,time)}
+\PYG{+w}{    }\PYG{k}{end}
+
+\PYG{+w}{    }\PYG{n}{refDate}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{datetime}\PYG{p}{(}\PYG{l+m+mi}{1800}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{t\PYGZus{}dt}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{refDate}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n+nb}{days}\PYG{p}{(}\PYG{n+nb}{time}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{mo}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{month}\PYG{p}{(}\PYG{n}{t\PYGZus{}dt}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n}{lon\PYGZus{}idx}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{lon}\PYG{o}{\PYGZgt{}=}\PYG{n}{REG\PYGZus{}LON}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{lon}\PYG{o}{\PYGZlt{}=}\PYG{n}{REG\PYGZus{}LON}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{lat\PYGZus{}idx}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{lat}\PYG{o}{\PYGZgt{}=}\PYG{n}{REG\PYGZus{}LAT}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}}\PYG{+w}{ }\PYG{n}{lat}\PYG{o}{\PYGZlt{}=}\PYG{n}{REG\PYGZus{}LAT}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{lon\PYGZus{}sub}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{lon}\PYG{p}{(}\PYG{n}{lon\PYGZus{}idx}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{lat\PYGZus{}sub}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{lat}\PYG{p}{(}\PYG{n}{lat\PYGZus{}idx}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{SSH}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{sshg}\PYG{p}{(}\PYG{n}{lat\PYGZus{}idx}\PYG{p}{,}\PYG{n}{lon\PYGZus{}idx}\PYG{p}{,}\PYG{p}{:}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c}{\PYGZpc{} === 四季平均 ===}
+\PYG{+w}{    }\PYG{n}{DJF}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n}{SSH}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n+nb}{ismember}\PYG{p}{(}\PYG{n}{mo}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{12}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{MAM}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n}{SSH}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n+nb}{ismember}\PYG{p}{(}\PYG{n}{mo}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{+w}{ }\PYG{l+m+mi}{4}\PYG{+w}{ }\PYG{l+m+mi}{5}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{JJA}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n}{SSH}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n+nb}{ismember}\PYG{p}{(}\PYG{n}{mo}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{6}\PYG{+w}{ }\PYG{l+m+mi}{7}\PYG{+w}{ }\PYG{l+m+mi}{8}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{SON}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n}{SSH}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n+nb}{ismember}\PYG{p}{(}\PYG{n}{mo}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{9}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{+w}{ }\PYG{l+m+mi}{11}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{YEAR}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n}{SSH}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c}{\PYGZpc{} 区域平均时间序列}
+\PYG{+w}{    }\PYG{n}{ssh\PYGZus{}mean}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{squeeze}\PYG{p}{(}\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n}{SSH}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{lon}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{lon\PYGZus{}sub}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{lat}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{lat\PYGZus{}sub}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{time}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{t\PYGZus{}dt}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{SSH}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{SSH}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{meanTS}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{ssh\PYGZus{}mean}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{DJF}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{DJF}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{MAM}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{MAM}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{JJA}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{JJA}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{SON}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{SON}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{data}\PYG{p}{.}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Y\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{.}\PYG{n}{YEAR}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{YEAR}\PYG{p}{;}
+\PYG{k}{end}
+
+\PYG{n}{clim}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2007}\PYG{p}{.}\PYG{n}{YEAR}\PYG{p}{,}\PYG{p}{[}\PYG{p}{]}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{all\PYGZsq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2017}\PYG{p}{.}\PYG{n}{YEAR}\PYG{p}{,}\PYG{p}{[}\PYG{p}{]}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{all\PYGZsq{}}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}
+
+\PYG{c}{\PYGZpc{}\PYGZpc{} === (1) 四季对比：2007 vs 2017 ===}
+\PYG{n}{seasons}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{DJF\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{MAM\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{JJA\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SON\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{titles}\PYG{+w}{  }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{冬季\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{春季\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{夏季\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{秋季\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{k}{for}\PYG{+w}{ }\PYG{n+nb}{i}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{4}
+\PYG{+w}{    }\PYG{n+nb}{figure}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Position\PYGZsq{}}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{100}\PYG{+w}{ }\PYG{l+m+mi}{100}\PYG{+w}{ }\PYG{l+m+mi}{1100}\PYG{+w}{ }\PYG{l+m+mi}{520}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{sname}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{seasons}\PYG{p}{\PYGZob{}}\PYG{n+nb}{i}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c}{\PYGZpc{} 左：2007}
+\PYG{+w}{    }\PYG{n+nb}{subplot}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{m\PYGZus{}proj}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mercator\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lon\PYGZsq{}}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LON}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lat\PYGZsq{}}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LAT}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{m\PYGZus{}contourf}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2007}\PYG{p}{.}\PYG{n}{lon}\PYG{p}{,}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2007}\PYG{p}{.}\PYG{n}{lat}\PYG{p}{,}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2007}\PYG{p}{.}\PYG{p}{(}\PYG{n}{sname}\PYG{p}{)}\PYG{p}{,}\PYG{l+m+mi}{24}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LineColor\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{none\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{caxis}\PYG{p}{(}\PYG{n}{clim}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colormap}\PYG{p}{(}\PYG{n}{cmap}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colorbar}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{m\PYGZus{}coast}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{m\PYGZus{}grid}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{box\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fancy\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{tickdir\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{in\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{title}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZpc{}s 2007年 \PYGZpc{}s SSHg \PYGZpc{}s\PYGZsq{}}\PYG{p}{,}\PYG{n}{titles}\PYG{p}{\PYGZob{}}\PYG{n+nb}{i}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{n}{titles}\PYG{p}{\PYGZob{}}\PYG{n+nb}{i}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{n}{region\PYGZus{}title}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c}{\PYGZpc{} 右：2017}
+\PYG{+w}{    }\PYG{n+nb}{subplot}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{m\PYGZus{}proj}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mercator\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lon\PYGZsq{}}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LON}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lat\PYGZsq{}}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LAT}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{m\PYGZus{}contourf}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2017}\PYG{p}{.}\PYG{n}{lon}\PYG{p}{,}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2017}\PYG{p}{.}\PYG{n}{lat}\PYG{p}{,}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2017}\PYG{p}{.}\PYG{p}{(}\PYG{n}{sname}\PYG{p}{)}\PYG{p}{,}\PYG{l+m+mi}{24}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LineColor\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{none\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{caxis}\PYG{p}{(}\PYG{n}{clim}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colormap}\PYG{p}{(}\PYG{n}{cmap}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colorbar}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{m\PYGZus{}coast}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{m\PYGZus{}grid}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{box\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fancy\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{tickdir\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{in\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{title}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZpc{}s 2017年 \PYGZpc{}s SSHg \PYGZpc{}s\PYGZsq{}}\PYG{p}{,}\PYG{n}{titles}\PYG{p}{\PYGZob{}}\PYG{n+nb}{i}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{n}{titles}\PYG{p}{\PYGZob{}}\PYG{n+nb}{i}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{n}{region\PYGZus{}title}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+nb}{sgtitle}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZpc{}s季节 SSHg 对比 (2007 vs 2017)\PYGZsq{}}\PYG{p}{,}\PYG{n}{titles}\PYG{p}{\PYGZob{}}\PYG{n+nb}{i}\PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{set}\PYG{p}{(}\PYG{n+nb}{gcf}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Color\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{w\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{saveas}\PYG{p}{(}\PYG{n+nb}{gcf}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{fullfile}\PYG{p}{(}\PYG{n}{outdir}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg\PYGZus{}\PYGZpc{}s\PYGZus{}2007vs2017.png\PYGZsq{}}\PYG{p}{,}\PYG{n}{sname}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{print}\PYG{p}{(}\PYG{n+nb}{gcf}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{fullfile}\PYG{p}{(}\PYG{n}{outdir}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg\PYGZus{}\PYGZpc{}s\PYGZus{}2007vs2017\PYGZsq{}}\PYG{p}{,}\PYG{n}{sname}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}dpdf\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}r300\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{end}
+
+\PYG{c}{\PYGZpc{}\PYGZpc{} === (2) 年平均对比 ===}
+\PYG{n+nb}{figure}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Position\PYGZsq{}}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{100}\PYG{+w}{ }\PYG{l+m+mi}{100}\PYG{+w}{ }\PYG{l+m+mi}{1000}\PYG{+w}{ }\PYG{l+m+mi}{480}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{subplot}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{m\PYGZus{}proj}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mercator\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lon\PYGZsq{}}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LON}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lat\PYGZsq{}}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LAT}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{m\PYGZus{}contourf}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2007}\PYG{p}{.}\PYG{n}{lon}\PYG{p}{,}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2007}\PYG{p}{.}\PYG{n}{lat}\PYG{p}{,}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2007}\PYG{p}{.}\PYG{n}{YEAR}\PYG{p}{,}\PYG{l+m+mi}{24}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LineColor\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{none\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{caxis}\PYG{p}{(}\PYG{n}{clim}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colormap}\PYG{p}{(}\PYG{n}{cmap}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colorbar}\PYG{p}{;}
+\PYG{n}{m\PYGZus{}coast}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{m\PYGZus{}grid}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{box\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fancy\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{tickdir\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{in\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{title}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2007年 年平均 SSHg \PYGZpc{}s\PYGZsq{}}\PYG{p}{,}\PYG{n}{region\PYGZus{}title}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{n+nb}{subplot}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{m\PYGZus{}proj}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{mercator\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lon\PYGZsq{}}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LON}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lat\PYGZsq{}}\PYG{p}{,}\PYG{n}{REG\PYGZus{}LAT}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{m\PYGZus{}contourf}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2017}\PYG{p}{.}\PYG{n}{lon}\PYG{p}{,}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2017}\PYG{p}{.}\PYG{n}{lat}\PYG{p}{,}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2017}\PYG{p}{.}\PYG{n}{YEAR}\PYG{p}{,}\PYG{l+m+mi}{24}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LineColor\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{none\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{caxis}\PYG{p}{(}\PYG{n}{clim}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colormap}\PYG{p}{(}\PYG{n}{cmap}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colorbar}\PYG{p}{;}
+\PYG{n}{m\PYGZus{}coast}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{m\PYGZus{}grid}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{box\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fancy\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{tickdir\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{in\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{title}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2017年 年平均 SSHg \PYGZpc{}s\PYGZsq{}}\PYG{p}{,}\PYG{n}{region\PYGZus{}title}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{n+nb}{sgtitle}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2007 与 2017 年年平均 SSHg 对比\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{set}\PYG{p}{(}\PYG{n+nb}{gcf}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Color\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{w\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{saveas}\PYG{p}{(}\PYG{n+nb}{gcf}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{fullfile}\PYG{p}{(}\PYG{n}{outdir}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg\PYGZus{}Annual\PYGZus{}2007vs2017.png\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n+nb}{gcf}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{fullfile}\PYG{p}{(}\PYG{n}{outdir}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg\PYGZus{}Annual\PYGZus{}2007vs2017\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}dpdf\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}r300\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{c}{\PYGZpc{}\PYGZpc{} === (3) 区域平均时间序列（2007 vs 2017） ===}
+\PYG{n+nb}{fprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZbs{}n=== 生成 2007 vs 2017 区域平均时间序列 ===\PYGZbs{}n\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{c}{\PYGZpc{} 提取每年各月平均（1\PYGZti{}12 月）}
+\PYG{n}{months}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{12}\PYG{p}{;}
+\PYG{n}{mean2007}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{NaN}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{12}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{mean2017}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{NaN}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{12}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{k}{for}\PYG{+w}{ }\PYG{n}{m}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{12}
+\PYG{+w}{    }\PYG{n}{idx07}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{month}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2007}\PYG{p}{.}\PYG{n}{time}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{m}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{idx17}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{month}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2017}\PYG{p}{.}\PYG{n}{time}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{m}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{mean2007}\PYG{p}{(}\PYG{n}{m}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2007}\PYG{p}{.}\PYG{n}{meanTS}\PYG{p}{(}\PYG{n}{idx07}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{mean2017}\PYG{p}{(}\PYG{n}{m}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n}{data}\PYG{p}{.}\PYG{n}{Y2017}\PYG{p}{.}\PYG{n}{meanTS}\PYG{p}{(}\PYG{n}{idx17}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{end}
+
+\PYG{c}{\PYGZpc{} === 绘图 ===}
+\PYG{n+nb}{figure}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Position\PYGZsq{}}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{150}\PYG{+w}{ }\PYG{l+m+mi}{150}\PYG{+w}{ }\PYG{l+m+mi}{900}\PYG{+w}{ }\PYG{l+m+mi}{400}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{hold}\PYG{+w}{ }\PYG{l+s}{on}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{grid}\PYG{+w}{ }\PYG{l+s}{on}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{box}\PYG{+w}{ }\PYG{l+s}{on}\PYG{p}{;}
+
+\PYG{n+nb}{plot}\PYG{p}{(}\PYG{n}{months}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{mean2007}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}o\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LineWidth\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{2.0}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{...}
+\PYG{+w}{    }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Color\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mf}{0.85}\PYG{+w}{ }\PYG{l+m+mf}{0.2}\PYG{+w}{ }\PYG{l+m+mf}{0.2}\PYG{p}{]}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{MarkerFaceColor\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mf}{0.9}\PYG{+w}{ }\PYG{l+m+mf}{0.3}\PYG{+w}{ }\PYG{l+m+mf}{0.3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c}{\PYGZpc{} 红线}
+\PYG{n+nb}{plot}\PYG{p}{(}\PYG{n}{months}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{mean2017}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}s\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LineWidth\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{2.0}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{...}
+\PYG{+w}{    }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Color\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mf}{0.2}\PYG{+w}{ }\PYG{l+m+mf}{0.4}\PYG{+w}{ }\PYG{l+m+mf}{0.8}\PYG{p}{]}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{MarkerFaceColor\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mf}{0.3}\PYG{+w}{ }\PYG{l+m+mf}{0.5}\PYG{+w}{ }\PYG{l+m+mf}{0.9}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{c}{\PYGZpc{} 蓝线}
+
+\PYG{n+nb}{xlim}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{l+m+mi}{12}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{xticks}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{12}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{xlabel}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{月份 (Month)\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{ylabel}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{区域平均 SSHg（原始单位）\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{legend}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2007 年\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{2017 年\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Location\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{best\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{title}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{区域平均 SSHg 月变化对比 \PYGZpc{}s\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{region\PYGZus{}title}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{set}\PYG{p}{(}\PYG{n+nb}{gca}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{FontSize\PYGZsq{}}\PYG{p}{,}\PYG{l+m+mi}{12}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{set}\PYG{p}{(}\PYG{n+nb}{gcf}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Color\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{w\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{c}{\PYGZpc{} 保存输出}
+\PYG{n+nb}{saveas}\PYG{p}{(}\PYG{n+nb}{gcf}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{fullfile}\PYG{p}{(}\PYG{n}{outdir}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg\PYGZus{}RegionalMean\PYGZus{}TS\PYGZus{}2007vs2017.png\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n+nb}{gcf}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{fullfile}\PYG{p}{(}\PYG{n}{outdir}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg\PYGZus{}RegionalMean\PYGZus{}TS\PYGZus{}2007vs2017\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}dpdf\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}r300\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n+nb}{fprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{✅ 已保存：\PYGZpc{}s\PYGZbs{}n\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{fullfile}\PYG{p}{(}\PYG{n}{outdir}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg\PYGZus{}RegionalMean\PYGZus{}TS\PYGZus{}2007vs2017.png\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\end{MintedVerbatim}

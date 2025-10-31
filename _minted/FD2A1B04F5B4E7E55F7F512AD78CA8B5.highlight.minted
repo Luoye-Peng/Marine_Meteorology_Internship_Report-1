@@ -1,0 +1,74 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n+nb}{clear}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{clc}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{close}\PYG{+w}{ }\PYG{l+s}{all}\PYG{p}{;}
+
+\PYG{n+nb}{years}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mi}{2007}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{2017}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{basePath}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{/Users/macbookair15/Desktop/海洋气象学/m\PYGZus{}map/\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{lonlim}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{180}\PYG{+w}{ }\PYG{l+m+mi}{180}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{latlim}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{80}\PYG{+w}{ }\PYG{l+m+mi}{80}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{cmap}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{parula}\PYG{p}{(}\PYG{l+m+mi}{200}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{k}{for}\PYG{+w}{ }\PYG{n}{y}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{years}
+\PYG{+w}{    }\PYG{n+nb}{fprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZbs{}n=============================\PYGZbs{}n\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{fprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{  处理年份: \PYGZpc{}d\PYGZbs{}n\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{fprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{=============================\PYGZbs{}n\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n}{fname}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{fullfile}\PYG{p}{(}\PYG{n}{basePath}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sshg.\PYGZpc{}d.nc\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n}{info}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{ncinfo}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{disp}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{文件包含的变量：\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{disp}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n}{info}\PYG{p}{.}\PYG{n}{Variables}\PYG{p}{.}\PYG{n}{Name}\PYG{p}{\PYGZcb{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{);}
+
+\PYG{l+s}{    lon  = ncread(fname, \PYGZsq{}}\PYG{n}{lon}\PYG{o}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{lat}\PYG{+w}{  }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{ncread}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lat\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{time}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{ncread}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{time\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{sshg}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{ncread}\PYG{p}{(}\PYG{n}{fname}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sshg\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{p}{[}\PYG{n}{nlat}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{nlon}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ntime}\PYG{p}{]}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{size}\PYG{p}{(}\PYG{n}{sshg}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{fprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg 数据维度: \PYGZpc{}d×\PYGZpc{}d×\PYGZpc{}d (lat×lon×time)\PYGZbs{}n\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{nlat}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{nlon}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ntime}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n}{minSSH}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{sshg}\PYG{p}{(}\PYG{p}{:}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{maxSSH}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{sshg}\PYG{p}{(}\PYG{p}{:}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{meanSSH}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n+nb}{double}\PYG{p}{(}\PYG{n}{sshg}\PYG{p}{(}\PYG{p}{:}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{fprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{原始SSHg范围: \PYGZpc{}d \PYGZti{} \PYGZpc{}d (平均值 = \PYGZpc{}.2f)\PYGZbs{}n\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{minSSH}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{maxSSH}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{meanSSH}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c}{\PYGZpc{}\PYGZpc{} === 时间变量转日期 ===}
+\PYG{+w}{    }\PYG{n}{refDate}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{datetime}\PYG{p}{(}\PYG{l+m+mi}{1800}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{time\PYGZus{}dt}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{refDate}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n+nb}{days}\PYG{p}{(}\PYG{n+nb}{time}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c}{\PYGZpc{}\PYGZpc{} === 绘制12个月平均图 ===}
+\PYG{+w}{    }\PYG{n}{clim}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{n+nb}{double}\PYG{p}{(}\PYG{n}{minSSH}\PYG{p}{)}\PYG{+w}{ }\PYG{n+nb}{double}\PYG{p}{(}\PYG{n}{maxSSH}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{n+nb}{figure}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Name\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZpc{}d\PYGZus{}Monthly\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Position\PYGZsq{}}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{100}\PYG{+w}{ }\PYG{l+m+mi}{100}\PYG{+w}{ }\PYG{l+m+mi}{1200}\PYG{+w}{ }\PYG{l+m+mi}{800}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{tiledlayout}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Padding\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{compact\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{TileSpacing\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{compact\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{for}\PYG{+w}{ }\PYG{n}{k}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{ntime}
+\PYG{+w}{        }\PYG{n+nb}{nexttile}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{m\PYGZus{}proj}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{robinson\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lon\PYGZsq{}}\PYG{p}{,}\PYG{n}{lonlim}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lat\PYGZsq{}}\PYG{p}{,}\PYG{n}{latlim}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{m\PYGZus{}pcolor}\PYG{p}{(}\PYG{n}{lon}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{lat}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{double}\PYG{p}{(}\PYG{n}{sshg}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n}{k}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{shading}\PYG{+w}{ }\PYG{l+s}{interp}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{m\PYGZus{}coast}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{m\PYGZus{}grid}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{box\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fancy\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{tickdir\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{in\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n+nb}{title}\PYG{p}{(}\PYG{n+nb}{datestr}\PYG{p}{(}\PYG{n}{time\PYGZus{}dt}\PYG{p}{(}\PYG{n}{k}\PYG{p}{)}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{yyyy年mm月\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n+nb}{caxis}\PYG{p}{(}\PYG{n}{clim}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colormap}\PYG{p}{(}\PYG{n}{cmap}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{end}
+\PYG{+w}{    }\PYG{n}{cb}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{colorbar}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Position\PYGZsq{}}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mf}{0.92}\PYG{+w}{ }\PYG{l+m+mf}{0.25}\PYG{+w}{ }\PYG{l+m+mf}{0.015}\PYG{+w}{ }\PYG{l+m+mf}{0.5}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{cb}\PYG{p}{.}\PYG{n}{Label}\PYG{p}{.}\PYG{n}{String}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg (原始单位)\PYGZsq{}}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{sgtitle}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZpc{}d年 月平均 SSHg 原始数据分布\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c}{\PYGZpc{}\PYGZpc{} === 年平均图 ===}
+\PYG{+w}{    }\PYG{n}{sshg\PYGZus{}year}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n+nb}{double}\PYG{p}{(}\PYG{n}{sshg}\PYG{p}{)}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{figure}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Name\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZpc{}d\PYGZus{}AnnualMean\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Position\PYGZsq{}}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{200}\PYG{+w}{ }\PYG{l+m+mi}{200}\PYG{+w}{ }\PYG{l+m+mi}{900}\PYG{+w}{ }\PYG{l+m+mi}{450}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{m\PYGZus{}proj}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{robinson\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lon\PYGZsq{}}\PYG{p}{,}\PYG{n}{lonlim}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{lat\PYGZsq{}}\PYG{p}{,}\PYG{n}{latlim}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{m\PYGZus{}pcolor}\PYG{p}{(}\PYG{n}{lon}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{lat}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{sshg\PYGZus{}year}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{shading}\PYG{+w}{ }\PYG{l+s}{interp}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{m\PYGZus{}coast}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{k\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{m\PYGZus{}grid}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{box\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fancy\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{tickdir\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{in\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{colorbar}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{colormap}\PYG{p}{(}\PYG{n}{cmap}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{caxis}\PYG{p}{(}\PYG{n}{clim}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{title}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZpc{}d年 年平均 SSHg (原始值)\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c}{\PYGZpc{}\PYGZpc{} === 空间平均时间序列 ===}
+\PYG{+w}{    }\PYG{n}{sshg\PYGZus{}mean\PYGZus{}time}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{squeeze}\PYG{p}{(}\PYG{n+nb}{mean}\PYG{p}{(}\PYG{n+nb}{double}\PYG{p}{(}\PYG{n}{sshg}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{omitnan\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{figure}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Name\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZpc{}d\PYGZus{}MeanTimeSeries\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Position\PYGZsq{}}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{200}\PYG{+w}{ }\PYG{l+m+mi}{200}\PYG{+w}{ }\PYG{l+m+mi}{700}\PYG{+w}{ }\PYG{l+m+mi}{350}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{plot}\PYG{p}{(}\PYG{n}{time\PYGZus{}dt}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{sshg\PYGZus{}mean\PYGZus{}time}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}o\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{LineWidth\PYGZsq{}}\PYG{p}{,}\PYG{l+m+mf}{1.5}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Color\PYGZsq{}}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mf}{0.2}\PYG{+w}{ }\PYG{l+m+mf}{0.5}\PYG{+w}{ }\PYG{l+m+mf}{0.8}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{xlabel}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{时间\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{ }\PYG{n+nb}{ylabel}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{SSHg (原始单位)\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nb}{title}\PYG{p}{(}\PYG{n+nb}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZpc{}d年 SSHg 空间平均时间序列 (原始值)\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{grid}\PYG{+w}{ }\PYG{l+s}{on}\PYG{p}{;}
+\PYG{k}{end}
+\end{MintedVerbatim}
